@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador Regressivo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <style>
+        .full-height {
+            height: 100vh;
+        }
+    </style>
+    <script>
+        function iniciarContagem(dataFinal, dataInicial, hoje) {
+            const fim = new Date(dataFinal).getTime();
+            const inicio = new Date(dataInicial).getTime();
+            const agora = new Date(hoje).getTime();
+            
+            let mensagem = "";
+            let alvo = 0;
+
+            if (agora < inicio) {
+                mensagem = "Clara viaja em: ";
+                alvo = inicio;
+            } else if (inicio <= agora && agora <= fim) {
+                mensagem = "Volta em: ";
+                alvo = fim;
+            } else {
+                document.getElementById('contador').innerHTML = "Voltou :)";
+                return;
+            }
+
+            const intervaloContagem = setInterval(() => {
+                const tempoAtual = new Date().getTime();
+                const tempoRestante = alvo - tempoAtual;
+
+                if (tempoRestante <= 0) {
+                    clearInterval(intervaloContagem);
+                    document.getElementById('contador').innerHTML = "Voltou :)";
+                    return;
+                }
+
+                const dias = Math.floor(tempoRestante / (1000 * 60 * 60 * 24));
+                const horas = Math.floor((tempoRestante % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutos = Math.floor((tempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((tempoRestante % (1000 * 60)) / 1000);
+
+                document.getElementById('mensagem').innerHTML = mensagem;
+                document.getElementById('contador').innerHTML =
+                    `${dias} dias, ${horas} horas, ${minutos} minutos, ${segundos} segundos`;
+            }, 1000);
+        }
+
+        window.onload = () => {
+            const dataFinal = "{{ data_final }}";
+            const dataInicial = "{{ data_inicial }}";
+            const hoje = "{{ hoje }}";
+            iniciarContagem(dataFinal, dataInicial, hoje);
+        };
+    </script>
+</head>
+<body>
+    <section class="section full-height">
+        <div class="container is-flex is-flex-direction-column is-align-items-center is-justify-content-center full-height">
+            <h1 class="title has-text-centered" id="mensagem">Contagem Regressiva</h1>
+            <div class="notification is-primary has-text-centered">
+                <p id="contador">Carregando...</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
