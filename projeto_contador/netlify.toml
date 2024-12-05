@@ -1,6 +1,0 @@
-[build]
-  publish = "build"  # Ajuste conforme necessário
-  command = "python manage.py collectstatic --noinput && python manage.py migrate"
-
-[[plugins]]
-  package = "@netlify/plugin-django"
